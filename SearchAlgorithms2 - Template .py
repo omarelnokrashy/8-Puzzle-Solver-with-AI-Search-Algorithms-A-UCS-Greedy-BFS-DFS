@@ -503,37 +503,67 @@ left_col, mid_col, right_col = st.columns([1, 1, 1])
 default_start = [1, 2, 3, 4, 0, 6, 7, 5, 8]
 default_goal = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
+# Initialize start state in session
+if "start_tiles" not in st.session_state:
+    st.session_state.start_tiles = list(default_start)
+
+def is_adjacent(pos, blank_pos):
+    r1, c1 = divmod(pos, 3)
+    r2, c2 = divmod(blank_pos, 3)
+    return abs(r1 - r2) + abs(c1 - c2) == 1
+
 with left_col:
-    st.markdown('<div class="card"><h3>📋 Start State</h3>', unsafe_allow_html=True)
-    start_state = []
+    st.markdown('<div class="card"><h3>📋 Start State (click to move)</h3>', unsafe_allow_html=True)
+    blank_idx = st.session_state.start_tiles.index(0)
     for i in range(3):
-        row_cols = st.columns(3)
+        btn_cols = st.columns(3)
         for j in range(3):
-            val = row_cols[j].text_input(
-                label=f"S{i}{j}",
-                value=str(default_start[i * 3 + j]),
-                key=f"s_{i}_{j}",
-                label_visibility="collapsed"
-            )
-            start_state.append(int(val) if val.strip().isdigit() else 0)
-    st.markdown(render_grid_html(start_state, default_goal, size=48), unsafe_allow_html=True)
+            pos = i * 3 + j
+            tile = st.session_state.start_tiles[pos]
+            with btn_cols[j]:
+                if tile == 0:
+                    st.button(" ", key=f"tile_{pos}", disabled=True, use_container_width=True)
+                elif is_adjacent(pos, blank_idx):
+                    if st.button(f"{tile}", key=f"tile_{pos}", use_container_width=True):
+                        st.session_state.start_tiles[blank_idx], st.session_state.start_tiles[pos] = tile, 0
+                        st.rerun()
+                else:
+                    st.button(f"{tile}", key=f"tile_{pos}", disabled=True, use_container_width=True)
+    if st.button("Reset", key="reset_start", use_container_width=True):
+        st.session_state.start_tiles = list(default_start)
+        st.rerun()
+    st.markdown(render_grid_html(st.session_state.start_tiles, default_goal, size=48), unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
+start_state = list(st.session_state.start_tiles)
+
+if "goal_tiles" not in st.session_state:
+    st.session_state.goal_tiles = list(default_goal)
+
 with mid_col:
-    st.markdown('<div class="card"><h3>🎯 Goal State</h3>', unsafe_allow_html=True)
-    goal_state = []
+    st.markdown('<div class="card"><h3>🎯 Goal State (click to move)</h3>', unsafe_allow_html=True)
+    goal_blank = st.session_state.goal_tiles.index(0)
     for i in range(3):
-        row_cols = st.columns(3)
+        btn_cols = st.columns(3)
         for j in range(3):
-            val = row_cols[j].text_input(
-                label=f"G{i}{j}",
-                value=str(default_goal[i * 3 + j]),
-                key=f"g_{i}_{j}",
-                label_visibility="collapsed"
-            )
-            goal_state.append(int(val) if val.strip().isdigit() else 0)
-    st.markdown(render_grid_html(goal_state, goal_state, size=48), unsafe_allow_html=True)
+            pos = i * 3 + j
+            tile = st.session_state.goal_tiles[pos]
+            with btn_cols[j]:
+                if tile == 0:
+                    st.button(" ", key=f"goal_{pos}", disabled=True, use_container_width=True)
+                elif is_adjacent(pos, goal_blank):
+                    if st.button(f"{tile}", key=f"goal_{pos}", use_container_width=True):
+                        st.session_state.goal_tiles[goal_blank], st.session_state.goal_tiles[pos] = tile, 0
+                        st.rerun()
+                else:
+                    st.button(f"{tile}", key=f"goal_{pos}", disabled=True, use_container_width=True)
+    if st.button("Reset", key="reset_goal", use_container_width=True):
+        st.session_state.goal_tiles = list(default_goal)
+        st.rerun()
+    st.markdown(render_grid_html(st.session_state.goal_tiles, st.session_state.goal_tiles, size=48), unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
+
+goal_state = list(st.session_state.goal_tiles)
 
 with right_col:
     st.markdown('<div class="card"><h3>📊 Live Heuristics</h3>', unsafe_allow_html=True)
@@ -650,3 +680,4 @@ if st.button("Solve Puzzle", type="primary", use_container_width=True):
                     step_label = "Start" if idx == 0 else ("Goal ✓" if idx == len(fullPath) - 1 else f"Step {idx}")
                     st.markdown(f'<div class="step-card"><div class="step-label">{step_label}</div>{action_badge}</div>', unsafe_allow_html=True)
                     st.markdown(render_grid_html(fullPath[idx], goal_state, size=36), unsafe_allow_html=True)
+

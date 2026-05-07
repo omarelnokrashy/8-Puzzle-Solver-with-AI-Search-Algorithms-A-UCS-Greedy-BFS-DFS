@@ -550,11 +550,24 @@ streamlit run "SearchAlgorithms2 - Template .py"
 
 This opens a browser with the interactive GUI where you can:
 
-1. Enter any **start state** and **goal state**
-2. Select an **algorithm** (A*, UCS, Greedy, BFS, DFS)
+1. **Click tiles** adjacent to the blank on the **Start State** or **Goal State** grids to move them — no typing needed
+2. Select an **algorithm** (A*, UCS, Greedy, BFS, DFS) from the info cards at the top
 3. Choose a **heuristic** (h1, h2, h3) for A* and Greedy
-4. See the **solution path** visualized step-by-step with colored tiles
-5. See **live heuristic values** and the dominance chain check
+4. Watch the **live heuristic bars** (h1, h2, h3) update in real-time as you click tiles
+5. Confirm the **dominance chain** `h3 ≥ h2 ≥ h1 ≥ 0` holds throughout every move
+6. Hit **Solve** to see the solution path visualized step-by-step with color-coded tiles (green = correct position, purple = misplaced)
+7. View **performance metrics**: total moves, states visited, and solve time
+
+### GUI Features
+
+| Feature | Description |
+|---------|-------------|
+| **Clickable Grids** | Click any tile next to the blank to slide it — both Start and Goal states |
+| **Algorithm Cards** | 5 cards showing f(n) formula, optimality, completeness, and memory usage |
+| **Live Heuristics** | Colored progress bars for h1, h2, h3 updating after every tile click |
+| **Dominance Check** | Real-time verification that h3 ≥ h2 ≥ h1 ≥ 0 |
+| **Solution Visualization** | Step-by-step grids with action arrows (⬆⬇⬅➡) |
+| **Reset Buttons** | Restore grids to default states |
 
 ---
 
@@ -576,6 +589,6 @@ This opens a browser with the interactive GUI where you can:
 2. **We implemented 5 search algorithms**, all sharing the same search loop — only the priority function differs.
 3. **We implemented 3 heuristics** (h1, h2, h3) with increasing strength: `h3 ≥ h2 ≥ h1`.
 4. **A* with h3** is the best — it finds the optimal solution while expanding the fewest nodes.
-5. **The GUI** lets you interactively test all combinations and visualize the solution.
+5. **The GUI** lets you interactively click tiles to move them, watch heuristics update live, and visualize solutions step-by-step.
 
 ---
