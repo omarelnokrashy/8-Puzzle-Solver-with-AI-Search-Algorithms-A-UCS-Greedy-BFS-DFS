@@ -451,7 +451,7 @@ div[data-testid="stTextInput"] label { display: none; }
 # ── Header ──
 st.markdown("""
 <div class="main-header">
-    <h1>🧩 8‑Puzzle Solver</h1>
+    <h1> 8‑Puzzle Solver</h1>
     <p>AI Search Algorithms — A*, UCS, Greedy, BFS & DFS</p>
 </div>
 """, unsafe_allow_html=True)

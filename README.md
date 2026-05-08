@@ -1,7 +1,6 @@
 # 🧩 8-Puzzle Solver — Full Project Explanation
 
 > **RA'26 Project** — AI Search Algorithms  
-> This document explains every part of the project so any team member can understand and present it.
 
 ---
 
